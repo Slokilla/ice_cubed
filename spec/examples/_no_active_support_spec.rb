@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # This file is loaded and run alphabetically first in the suite, before
 # ActiveSupport gets loaded by other specs.
 
-module IceCube
+module IceCubed
   describe TimeUtil do
 
     before do
