@@ -1,4 +1,4 @@
-# fire_cube - Easy schedule expansion
+# ice_cube - Easy schedule expansion
 
 [![Build Status][travis-ice_cube-badge_image]][travis-ice_cube]
 [![Gem Version](https://badge.fury.io/rb/ice_cube.svg)](http://badge.fury.io/rb/ice_cube)

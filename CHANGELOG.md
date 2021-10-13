@@ -2,6 +2,7 @@
 
 ## Next version
 
+* Project forked from seejohnrun/ice_cube to allow ongoing support
 * [FEATURE]     Italian translations
 
 ## 0.16.3 / 2018-07-23
