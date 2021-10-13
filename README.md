@@ -1,6 +1,6 @@
 # ice_cubed - Easy schedule expansion
 
-[![Build Status][travis-ice_cube-badge_image]][travis-ice_cube]
+[![Build Status](https://app.travis-ci.com/configua/ice_cubed.svg?branch=master)](https://app.travis-ci.com/configua/ice_cubed)
 [![Gem Version](https://badge.fury.io/rb/ice_cubed.svg)](http://badge.fury.io/rb/ice_cubed)
 
 ## Forked from seejohnrun/ice_cube
