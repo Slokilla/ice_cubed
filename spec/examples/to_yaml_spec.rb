@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe Schedule, 'to_yaml' do
 
     before do

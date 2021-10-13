@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe WeeklyRule, 'interval validation' do
     it 'converts a string integer to an actual int when using the interval method' do
       rule = Rule.weekly.interval("2")

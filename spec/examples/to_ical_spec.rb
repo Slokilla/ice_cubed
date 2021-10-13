@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require 'active_support/time'
 
-describe IceCube, 'to_ical' do
+describe IceCubed, 'to_ical' do
 
   it 'should return a proper ical representation for a basic daily rule' do
     rule = IceCubed::Rule.daily

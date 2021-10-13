@@ -3,7 +3,7 @@ require 'benchmark'
 
 describe IceCubed::Schedule do
 
-  include IceCube
+  include IceCubed
 
   it 'yields itself for configuration' do
     t1 = Time.utc(2013, 2, 12, 12, 34 ,56)

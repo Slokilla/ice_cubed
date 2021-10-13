@@ -1,7 +1,7 @@
 require 'active_support/time'
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe IceCube, "::ValidatedRule" do
+describe IceCubed, "::ValidatedRule" do
   describe "#next_time" do
 
     context "monthly" do

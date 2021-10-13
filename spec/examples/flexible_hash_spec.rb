@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe FlexibleHash do
 
     subject(:hash) { described_class.new(:sym => true, "str" => true, 1 => true) }

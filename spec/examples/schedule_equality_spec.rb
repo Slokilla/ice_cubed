@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module IceCube
+module IceCubed
   describe Schedule do
     let(:t0) { Time.utc(2017, 1, 1, 12, 34, 56) }
     let(:s1) { IceCubed::Schedule.new(t0) }

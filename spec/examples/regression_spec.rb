@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe Schedule do
 
     WORLD_TIME_ZONES.each do |zone|

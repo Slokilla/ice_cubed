@@ -3,7 +3,7 @@ require 'active_support/time'
 require 'active_support/version'
 require 'tzinfo' if ActiveSupport::VERSION::MAJOR == 3
 
-module IceCube
+module IceCubed
   describe Schedule, 'using ActiveSupport' do
 
     before(:all) { Time.zone = 'Eastern Time (US & Canada)' }

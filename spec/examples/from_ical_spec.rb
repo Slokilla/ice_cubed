@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require 'active_support/time'
 
-module IceCube
+module IceCubed
 
   describe Rule, 'from_ical' do
 
