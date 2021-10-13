@@ -1,5 +1,5 @@
 require "bundler/setup"
-require 'ice_cube'
+require 'ice_cubed'
 require 'timeout'
 
 begin
@@ -9,7 +9,7 @@ rescue LoadError
   # okay
 end
 
-IceCube.compatibility = 12
+IceCubed.compatibility = 12
 
 DAY = Time.utc(2010, 3, 1)
 WEDNESDAY = Time.utc(2010, 6, 23, 5, 0, 0)
@@ -20,12 +20,12 @@ WORLD_TIME_ZONES = [
   'Pacific/Auckland',   # +1200 / +1300
 ]
 
-# TODO: enable warnings here and update specs to call IceCube objects correctly
+# TODO: enable warnings here and update specs to call IceCubed objects correctly
 def Object.const_missing(sym)
   case sym
   when :Schedule, :Rule, :Occurrence, :TimeUtil, :ONE_DAY, :ONE_HOUR, :ONE_MINUTE
-    # warn "Use IceCube::#{sym}", caller[0]
-    IceCube.const_get(sym)
+    # warn "Use IceCubed::#{sym}", caller[0]
+    IceCubed.const_get(sym)
   else
     super
   end
