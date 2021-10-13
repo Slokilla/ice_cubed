@@ -5,7 +5,7 @@ describe IceCube, "::ValidatedRule" do
   describe "#next_time" do
 
     context "monthly" do
-      let(:rule) { IceCube::Rule.monthly }
+      let(:rule) { IceCubed::Rule.monthly }
 
       it "Should return current day when starting on same day" do
         t0 = Time.new(2013, 2, 25, 0, 0, 0)
@@ -42,7 +42,7 @@ describe IceCube, "::ValidatedRule" do
 
     it 'should match times with usec' do
       t0 = Time.new(2012, 12, 21, 12, 21, 12.12121212)
-      rule = IceCube::Rule.secondly
+      rule = IceCubed::Rule.secondly
 
       expect(rule.next_time(t0 + 1, t0, nil)).to eq(t0 + 1)
     end

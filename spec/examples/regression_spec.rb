@@ -126,7 +126,7 @@ module IceCube
           :end_time: 2022-09-15 0:00:00.000000000 +00:00
           :rrules:
           - :validations: {}
-            :rule_type: IceCube::DailyRule
+            :rule_type: IceCubed::DailyRule
             :interval: 1
           :exrules: []
           :rtimes: []
@@ -141,7 +141,7 @@ module IceCube
           :end_time: 2022-09-15 15:00:00.000000000 +00:00
           :rrules:
           - :validations: {}
-            :rule_type: IceCube::DailyRule
+            :rule_type: IceCubed::DailyRule
             :interval: 1
           :exrules: []
           :rtimes: []

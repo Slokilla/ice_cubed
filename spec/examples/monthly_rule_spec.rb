@@ -36,7 +36,7 @@ module IceCube
       t0 = Time.utc(2013, 5, 17)
       rule = Rule.monthly(3)
       rule.interval(1)
-      expect(rule.next_time(t0 + 1, t0, nil)).to eq(t0 + (IceCube::ONE_DAY * 31))
+      expect(rule.next_time(t0 + 1, t0, nil)).to eq(t0 + (IceCubed::ONE_DAY * 31))
     end
 
     it 'should produce the correct number of days for @interval = 1' do
@@ -157,18 +157,18 @@ module IceCube
 
     describe "month_of_year validation" do
       it "allows multiples of 12" do
-        expect { IceCube::Rule.monthly(24).month_of_year(3, 6) }.to_not raise_error
+        expect { IceCubed::Rule.monthly(24).month_of_year(3, 6) }.to_not raise_error
       end
 
       it "raises errors for misaligned interval and month_of_year values" do
         expect {
-          IceCube::Rule.monthly(10).month_of_year(3, 6)
+          IceCubed::Rule.monthly(10).month_of_year(3, 6)
         }.to raise_error(ArgumentError, "month_of_year can only be used with interval(1) or multiples of interval(12)")
       end
 
       it "raises errors for misaligned month_of_year values when changing interval" do
         expect {
-          IceCube::Rule.monthly.month_of_year(3, 6).interval(5)
+          IceCubed::Rule.monthly.month_of_year(3, 6).interval(5)
         }.to raise_error(ArgumentError, "month_of_year can only be used with interval(1) or multiples of interval(12)")
       end
     end

@@ -18,8 +18,8 @@ describe :remaining_occurrences do
   end
 
   it 'should raise an error if there is nothing to stop it' do
-    schedule = IceCube::Schedule.new
-    schedule.add_recurrence_rule IceCube::Rule.daily
+    schedule = IceCubed::Schedule.new
+    schedule.add_recurrence_rule IceCubed::Rule.daily
     expect { schedule.remaining_occurrences }.to raise_error ArgumentError
   end
 
@@ -31,8 +31,8 @@ describe :occurring_between? do
   let(:end_time)   { start_time + 30 }
 
   let(:schedule) do
-    IceCube::Schedule.new(start_time, :duration => 30).tap do |schedule|
-      schedule.rrule IceCube::Rule.daily
+    IceCubed::Schedule.new(start_time, :duration => 30).tap do |schedule|
+      schedule.rrule IceCubed::Rule.daily
     end
   end
 

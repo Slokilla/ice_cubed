@@ -307,8 +307,8 @@ module IceCube
 
     it 'should be able to bring in a schedule with a rule from hash with symbols or strings' do
       time = Time.zone.now
-      symbol_data = { :start_time => time, :rrules =>   [ { :validations => { :day => [1] }, :rule_type => "IceCube::DailyRule", :interval => 1 } ], :rtimes => [], :extimes => [] }
-      string_data = { 'start_time' => time, 'rrules' => [ { 'validations' => { 'day' => [1] }, 'rule_type' => "IceCube::DailyRule", 'interval' => 1 } ], 'rtimes' => [], 'extimes' => [] }
+      symbol_data = { :start_time => time, :rrules =>   [ { :validations => { :day => [1] }, :rule_type => "IceCubed::DailyRule", :interval => 1 } ], :rtimes => [], :extimes => [] }
+      string_data = { 'start_time' => time, 'rrules' => [ { 'validations' => { 'day' => [1] }, 'rule_type' => "IceCubed::DailyRule", 'interval' => 1 } ], 'rtimes' => [], 'extimes' => [] }
 
       symbol_yaml = Schedule.from_hash(symbol_data).to_yaml
       string_yaml = Schedule.from_hash(string_data).to_yaml
@@ -316,12 +316,12 @@ module IceCube
     end
 
     it 'should raise an ArgumentError when trying to deserialize an invalid rule type' do
-      data = {:rule_type => 'IceCube::FakeRule', :interval => 1}
+      data = {:rule_type => 'IceCubed::FakeRule', :interval => 1}
       expect { Rule.from_hash(data) }.to raise_error(ArgumentError, 'Invalid rule frequency type: Fake')
     end
 
     it 'should raise an ArgumentError when trying to deserialize an invalid validation' do
-      data = {:validations => {:fake => []}, :rule_type => 'IceCube::DailyRule', :interval => 1}
+      data = {:validations => {:fake => []}, :rule_type => 'IceCubed::DailyRule', :interval => 1}
       expect { Rule.from_hash(data) }.to raise_error(ArgumentError, 'Invalid rule validation type: fake')
     end
   end

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe IceCube::MinutelyRule do
+describe IceCubed::MinutelyRule do
 
   describe 'interval validation' do
     it 'converts a string integer to an actual int when using the interval method' do
@@ -30,7 +30,7 @@ describe IceCube::MinutelyRule do
       t0 = Time.now
       rule = Rule.minutely(7)
       rule.interval(5)
-      expect(rule.next_time(t0 + 1, t0, nil)).to eq(t0 + 5 * IceCube::ONE_MINUTE)
+      expect(rule.next_time(t0 + 1, t0, nil)).to eq(t0 + 5 * IceCubed::ONE_MINUTE)
     end
 
     it 'should work across DST start hour' do
@@ -74,21 +74,21 @@ describe IceCube::MinutelyRule do
 
     it "should realign to the first minute_of_hour" do
       t0 = Time.utc(2017, 1, 1, 20, 30, 40)
-      schedule = IceCube::Schedule.new(t0)
-      schedule.rrule IceCube::Rule.minutely(10).minute_of_hour(5, 15)
+      schedule = IceCubed::Schedule.new(t0)
+      schedule.rrule IceCubed::Rule.minutely(10).minute_of_hour(5, 15)
 
       expect(schedule.first(2)).to eq [t0 + 35*ONE_MINUTE, t0 + 45*ONE_MINUTE]
     end
 
     it "raises errors for misaligned interval and minute_of_hour values" do
       expect {
-        IceCube::Rule.minutely(10).minute_of_hour(3, 6)
+        IceCubed::Rule.minutely(10).minute_of_hour(3, 6)
       }.to raise_error(ArgumentError, "intervals in minute_of_hour(3, 6) must be multiples of interval(10)")
     end
 
     it "raises errors for misaligned minute_of_hour values when changing interval" do
       expect {
-        IceCube::Rule.minutely(3).minute_of_hour(3, 6).interval(5)
+        IceCubed::Rule.minutely(3).minute_of_hour(3, 6).interval(5)
       }.to raise_error(ArgumentError, "interval(5) must be a multiple of intervals in minute_of_hour(3, 6)")
     end
 
