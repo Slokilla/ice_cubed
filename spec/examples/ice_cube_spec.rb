@@ -203,7 +203,7 @@ describe IceCube::Schedule do
   end
 
   # here we purposely put a UTC time that is before the range ends, to
-  # verify ice_cube is properly checking until bounds
+  # verify ice_cubed is properly checking until bounds
   it 'works with a until date that is UTC, but the start date is local' do
     Time.zone = 'Eastern Time (US & Canada)'
     start_time = Time.zone.local(2010, 11, 6, 5, 0, 0)
@@ -218,7 +218,7 @@ describe IceCube::Schedule do
   end
 
   # here we purposely put a local time that is before the range ends, to
-  # verify ice_cube is properly checking until bounds
+  # verify ice_cubed is properly checking until bounds
   it 'works with a until date that is local, but the start date is UTC' do
     start_time = Time.utc(2010, 11, 6, 5, 0, 0)
     Time.zone = 'Eastern Time (US & Canada)'

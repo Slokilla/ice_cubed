@@ -151,19 +151,19 @@ module IceCube
       start_time = Time.zone.local(2011, 11, 5, 12, 0, 0)
       schedule = Schedule.new(start_time)
       schedule = Schedule.from_yaml(schedule.to_yaml) # round trip
-      ice_cube_start_time = schedule.start_time
-      expect(ice_cube_start_time).to eq(start_time)
-      expect(ice_cube_start_time.utc_offset).to eq(start_time.utc_offset)
+      ice_cubed_start_time = schedule.start_time
+      expect(ice_cubed_start_time).to eq(start_time)
+      expect(ice_cubed_start_time.utc_offset).to eq(start_time.utc_offset)
     end
 
     it 'should be able to roll forward times and get back times in an array - Time' do
       start_time = Time.now
       schedule = Schedule.new(start_time)
       schedule = Schedule.from_yaml(schedule.to_yaml) # round trip
-      ice_cube_start_time = schedule.start_time
-      expect(ice_cube_start_time.to_s).to eq(start_time.to_s)
-      expect(ice_cube_start_time.class).to eq(Time)
-      expect(ice_cube_start_time.utc_offset).to eq(start_time.utc_offset)
+      ice_cubed_start_time = schedule.start_time
+      expect(ice_cubed_start_time.to_s).to eq(start_time.to_s)
+      expect(ice_cubed_start_time.class).to eq(Time)
+      expect(ice_cubed_start_time.utc_offset).to eq(start_time.utc_offset)
     end
 
     it 'should be able to go back and forth to yaml and then call occurrences' do
