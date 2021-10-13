@@ -1,5 +1,5 @@
 require "bundler/setup"
-require 'ice_cube'
+require 'ice_cubed'
 require 'timeout'
 
 begin
