@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary       = 'Ruby Date Recurrence Library'
   s.description   = 'ice_cubed is a recurring date library for Ruby.  It allows for quick, programatic expansion of recurring date rules.'
   s.authors       = ['John Crepezzi']
-  s.homepage      = 'http://seejohnrun.github.com/ice_cube/'
+  s.homepage      = 'https://github.com/configua/ice_cubed/'
   s.license       = 'MIT'
 
   s.version       = IceCubed::VERSION
