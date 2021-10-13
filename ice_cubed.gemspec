@@ -6,12 +6,12 @@ require 'ice_cube/version'
 Gem::Specification.new do |s|
   s.name          = 'ice_cubed'
   s.summary       = 'Ruby Date Recurrence Library'
-  s.description   = 'ice_cube is a recurring date library for Ruby.  It allows for quick, programatic expansion of recurring date rules.'
+  s.description   = 'ice_cubed is a recurring date library for Ruby.  It allows for quick, programatic expansion of recurring date rules.'
   s.authors       = ['John Crepezzi']
   s.homepage      = 'http://seejohnrun.github.com/ice_cube/'
   s.license       = 'MIT'
 
-  s.version       = IceCube::VERSION
+  s.version       = IceCubed::VERSION
   s.platform      = Gem::Platform::RUBY
   s.files         = Dir['lib/**/*.rb', 'config/**/*.yml']
   s.test_files    = Dir.glob('spec/*.rb')

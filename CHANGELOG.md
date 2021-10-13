@@ -1,7 +1,8 @@
 # Changelog
 
-## Next version
+## 0.16.4
 
+* Gem renamed to `ice_cubed`
 * Project forked from seejohnrun/ice_cube to allow ongoing support
 * [FEATURE]     Italian translations
 

@@ -1,5 +1,5 @@
 ja:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ' / '
     not: '%{target}以外'
     not_on: '%{target}以外'

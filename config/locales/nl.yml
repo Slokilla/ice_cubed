@@ -1,5 +1,5 @@
 nl:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ' / '
     not: 'niet %{target}'
     not_on: 'niet op %{target}'
