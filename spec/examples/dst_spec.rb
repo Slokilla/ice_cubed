@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe Schedule do
 
     # DST in 2010 is March 14th at 2am

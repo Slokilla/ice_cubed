@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe HashParser do
 
     let(:t) { Time.utc(2014, 3, 22) }

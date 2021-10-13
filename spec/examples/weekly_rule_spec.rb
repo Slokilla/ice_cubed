@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-module IceCube
+module IceCubed
   describe WeeklyRule, 'interval validation' do
     it 'converts a string integer to an actual int when using the interval method' do
       rule = Rule.weekly.interval("2")
@@ -176,7 +176,7 @@ module IceCube
       t0 = Time.utc(2017, 1, 15, 9, 0, 0)
       t1 = Time.utc(2017, 1, 24)
       t2 = t0 + (2 * ONE_WEEK)
-      schedule = Schedule.new(t0, :duration => IceCube::ONE_HOUR)
+      schedule = Schedule.new(t0, :duration => IceCubed::ONE_HOUR)
       schedule.add_recurrence_rule Rule.weekly(2, :sunday).day(:sunday)
       t3 = schedule.next_occurrence(t1, :spans => true)
       expect(t3).to eq(t2)
@@ -190,8 +190,8 @@ module IceCube
     # 20 21 22 23 24 25 26
     # 27 28 29 30 31
     it 'finds correct next_occurrence for biweekly rules realigned from beginning of start week' do
-      schedule = IceCube::Schedule.new(Time.utc(2016, 3, 3))
-      schedule.add_recurrence_rule IceCube::Rule.weekly(2).day(:sunday)
+      schedule = IceCubed::Schedule.new(Time.utc(2016, 3, 3))
+      schedule.add_recurrence_rule IceCubed::Rule.weekly(2).day(:sunday)
 
       result = schedule.next_occurrence(Time.utc(2016, 3, 3))
       expect(result).to eq Time.utc(2016, 3, 13)
@@ -205,16 +205,16 @@ module IceCube
     # 22 23 24 25 26 27 28
     # 29 30 31
     it 'finds correct next_occurrence for biweekly rules realigned from skipped week' do
-      schedule = IceCube::Schedule.new(Time.utc(2017, 1, 2))
-      schedule.add_recurrence_rule IceCube::Rule.weekly(2).day(:monday, :tuesday)
+      schedule = IceCubed::Schedule.new(Time.utc(2017, 1, 2))
+      schedule.add_recurrence_rule IceCubed::Rule.weekly(2).day(:monday, :tuesday)
 
       result = schedule.next_occurrence(Time.utc(2017, 1, 9))
       expect(result).to eq Time.utc(2017, 1, 16)
     end
 
     it 'finds correct previous_occurrence for biweekly rule realigned from skipped week' do
-      schedule = IceCube::Schedule.new(Time.utc(2017, 1, 2))
-      schedule.add_recurrence_rule IceCube::Rule.weekly(2).day(:monday, :tuesday)
+      schedule = IceCubed::Schedule.new(Time.utc(2017, 1, 2))
+      schedule.add_recurrence_rule IceCubed::Rule.weekly(2).day(:monday, :tuesday)
 
       result = schedule.previous_occurrence(Time.utc(2017, 1, 9))
       expect(result).to eq Time.utc(2017, 1, 3)
@@ -225,25 +225,25 @@ module IceCube
     end
 
     it 'should produce correct days for bi-weekly interval, starting on a non-sunday' do
-      schedule = IceCube::Schedule.new(Time.local(2015, 3, 3))
-      schedule.add_recurrence_rule IceCube::Rule.weekly(2, :monday).day(:tuesday)
+      schedule = IceCubed::Schedule.new(Time.local(2015, 3, 3))
+      schedule.add_recurrence_rule IceCubed::Rule.weekly(2, :monday).day(:tuesday)
       range_start = Time.local(2015, 3, 15)
-      times = schedule.occurrences_between(range_start, range_start + IceCube::ONE_WEEK)
+      times = schedule.occurrences_between(range_start, range_start + IceCubed::ONE_WEEK)
       expect(times.first).to eq Time.local(2015, 3, 17)
     end
 
     it 'should produce correct days for monday-based bi-weekly interval, starting on a sunday' do
-      schedule = IceCube::Schedule.new(Time.local(2015, 3, 1))
-      schedule.add_recurrence_rule IceCube::Rule.weekly(2, :monday).day(:sunday)
+      schedule = IceCubed::Schedule.new(Time.local(2015, 3, 1))
+      schedule.add_recurrence_rule IceCubed::Rule.weekly(2, :monday).day(:sunday)
       range_start = Time.local(2015, 3, 1)
-      times = schedule.occurrences_between(range_start, range_start + IceCube::ONE_WEEK)
+      times = schedule.occurrences_between(range_start, range_start + IceCubed::ONE_WEEK)
       expect(times.first).to eq Time.local(2015, 3, 1)
     end
 
     it "should stay aligned to the start week when selecting occurrences with the spans option" do
       t0 = Time.local(2017, 1, 15)
-      schedule = IceCube::Schedule.new(t0, duration: ONE_HOUR)
-      schedule.add_recurrence_rule IceCube::Rule.weekly(2).day(:sunday)
+      schedule = IceCubed::Schedule.new(t0, duration: ONE_HOUR)
+      schedule.add_recurrence_rule IceCubed::Rule.weekly(2).day(:sunday)
       ts = schedule.occurrences_between(t0, t0 + ONE_WEEK * 4, spans: true)
 
       expect(ts).to eq([t0, t0 + ONE_WEEK * 2, t0 + ONE_WEEK * 4])
@@ -260,9 +260,9 @@ module IceCube
       # 26 27 28 29 30
 
       it "should align next_occurrences with first valid weekday when schedule starts on a Monday" do
-        schedule = IceCube::Schedule.new(Time.utc(2017, 6, 5))
+        schedule = IceCubed::Schedule.new(Time.utc(2017, 6, 5))
         except_tuesday = [:monday, :wednesday, :thursday, :friday, :saturday, :sunday]
-        schedule.add_recurrence_rule IceCube::Rule.weekly(2, :monday).day(except_tuesday)
+        schedule.add_recurrence_rule IceCubed::Rule.weekly(2, :monday).day(except_tuesday)
         sample = [
           Time.utc(2017,  6,  5),
           Time.utc(2017,  6,  7),
@@ -279,8 +279,8 @@ module IceCube
 
       it "should align next_occurrence with first valid weekday when schedule starts on a Monday" do
         t0 = Time.utc(2017,  6,  5)
-        schedule = IceCube::Schedule.new(t0)
-        schedule.add_recurrence_rule IceCube::Rule.weekly(2, :monday).day(:monday, :thursday)
+        schedule = IceCubed::Schedule.new(t0)
+        schedule.add_recurrence_rule IceCubed::Rule.weekly(2, :monday).day(:monday, :thursday)
         sample = [
           Time.utc(2017,  6,  5),
           Time.utc(2017,  6,  8),
@@ -294,8 +294,8 @@ module IceCube
 
       it "should align next_occurrence with first valid weekday when schedule starts on a Wednesday" do
         t0 = Time.utc(2017,  6,  7)
-        schedule = IceCube::Schedule.new(t0)
-        schedule.add_recurrence_rule IceCube::Rule.weekly(2, :monday).day(:wednesday, :sunday)
+        schedule = IceCubed::Schedule.new(t0)
+        schedule.add_recurrence_rule IceCubed::Rule.weekly(2, :monday).day(:wednesday, :sunday)
         sample = [
           Time.utc(2017,  6,  7),
           Time.utc(2017,  6, 11),
@@ -311,8 +311,8 @@ module IceCube
 
     it "should align next_occurrence with the earliest hour validation" do
       t0 = Time.utc(2017, 7, 28, 20, 30, 40)
-      schedule = IceCube::Schedule.new(t0)
-      schedule.add_recurrence_rule IceCube::Rule.weekly.day(:saturday).hour_of_day(19).minute_of_hour(29).second_of_minute(39)
+      schedule = IceCubed::Schedule.new(t0)
+      schedule.add_recurrence_rule IceCubed::Rule.weekly.day(:saturday).hour_of_day(19).minute_of_hour(29).second_of_minute(39)
 
       expect(schedule.next_occurrence(t0)).to eq Time.utc(2017, 7, 29, 19, 29, 39)
     end
@@ -320,14 +320,14 @@ module IceCube
     describe "using occurs_between with a biweekly schedule" do
       [[0, 1, 2], [0, 6, 1], [5, 1, 6], [6, 5, 7]].each do |wday, offset, lead|
         start_time    = Time.utc(2014, 1, 5, 9, 0, 0)
-        expected_time = start_time + (IceCube::ONE_DAY * 14)
+        expected_time = start_time + (IceCubed::ONE_DAY * 14)
         offset_wday   = (wday + offset) % 7
 
         context "starting on weekday #{wday} selecting weekday #{offset} with a #{lead} day advance window" do
-          let(:biweekly)      { IceCube::Rule.weekly(2).day(0, 1, 2, 3, 4, 5, 6) }
-          let(:schedule)      { IceCube::Schedule.new(start_time + (IceCube::ONE_DAY * wday), :duration => IceCube::ONE_HOUR) { |s| s.rrule biweekly } }
-          let(:expected_date) { expected_time + (IceCube::ONE_DAY * offset_wday) }
-          let(:range)         { [expected_date - (IceCube::ONE_DAY * lead), expected_date] }
+          let(:biweekly)      { IceCubed::Rule.weekly(2).day(0, 1, 2, 3, 4, 5, 6) }
+          let(:schedule)      { IceCubed::Schedule.new(start_time + (IceCubed::ONE_DAY * wday), :duration => IceCubed::ONE_HOUR) { |s| s.rrule biweekly } }
+          let(:expected_date) { expected_time + (IceCubed::ONE_DAY * offset_wday) }
+          let(:range)         { [expected_date - (IceCubed::ONE_DAY * lead), expected_date] }
 
           it "should include weekday #{offset_wday} of the expected week" do
             expect(schedule.occurrences_between(range.first, range.last)).to include expected_date
@@ -349,8 +349,8 @@ module IceCube
       context 'when day of start_time does not align with specified day rule' do
         let(:start_time) { Time.utc(2018, 8, 7, 10, 0, 0) }
         let(:end_time) { Time.utc(2018, 8, 7, 15, 0, 0) }
-        let(:biweekly) { IceCube::Rule.weekly(2).day(:saturday).hour_of_day(10) }
-        let(:schedule) { IceCube::Schedule.new(start_time, end_time: end_time) { |s| s.rrule biweekly } }
+        let(:biweekly) { IceCubed::Rule.weekly(2).day(:saturday).hour_of_day(10) }
+        let(:schedule) { IceCubed::Schedule.new(start_time, end_time: end_time) { |s| s.rrule biweekly } }
         let(:range) { [Time.utc(2018, 8, 11, 7, 0, 0), Time.utc(2018, 8, 12, 6, 59, 59)] }
         let(:expected_date) { Time.utc(2018, 8, 11, 10, 0, 0) }
 
@@ -367,13 +367,13 @@ module IceCube
         offset_wday   = (wday + offset) % 7
 
         context "starting on weekday #{wday} selecting weekday #{offset} with a #{lead} day advance window" do
-          let(:weekly)        { IceCube::Rule.weekly(1).day(0, 1, 2, 3, 4, 5, 6) }
-          let(:schedule)      { IceCube::Schedule.new(start_week + wday * IceCube::ONE_DAY) { |s| s.rrule weekly } }
-          let(:expected_date) { expected_week + offset_wday * IceCube::ONE_DAY }
+          let(:weekly)        { IceCubed::Rule.weekly(1).day(0, 1, 2, 3, 4, 5, 6) }
+          let(:schedule)      { IceCubed::Schedule.new(start_week + wday * IceCubed::ONE_DAY) { |s| s.rrule weekly } }
+          let(:expected_date) { expected_week + offset_wday * IceCubed::ONE_DAY }
           let(:range)         { [expected_date - lead * ONE_DAY, expected_date] }
 
           it "should include weekday #{offset_wday} of the expected week" do
-            wday_of_start_week = start_week + wday * IceCube::ONE_DAY
+            wday_of_start_week = start_week + wday * IceCubed::ONE_DAY
 
             expect(schedule.occurrences_between(range.first, range.last)).to include expected_date
             expect(schedule.occurrences_between(range.first, range.last).first).to eq(wday_of_start_week)

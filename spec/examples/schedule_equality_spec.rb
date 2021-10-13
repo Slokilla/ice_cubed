@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-module IceCube
+module IceCubed
   describe Schedule do
     let(:t0) { Time.utc(2017, 1, 1, 12, 34, 56) }
-    let(:s1) { IceCube::Schedule.new(t0) }
-    let(:s2) { IceCube::Schedule.new(t0) }
+    let(:s1) { IceCubed::Schedule.new(t0) }
+    let(:s2) { IceCubed::Schedule.new(t0) }
 
     describe :eql? do
       subject(:equality) { s1 == s2 }

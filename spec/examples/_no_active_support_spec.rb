@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # This file is loaded and run alphabetically first in the suite, before
 # ActiveSupport gets loaded by other specs.
 
-module IceCube
+module IceCubed
   describe TimeUtil do
 
     before do
@@ -28,8 +28,8 @@ module IceCube
         end
 
         it 'should serialize to hash without error' do
-          schedule = IceCube::Schedule.new(Time.now)
-          schedule.add_recurrence_rule IceCube::Rule.hourly.until(Date.today >> 1)
+          schedule = IceCubed::Schedule.new(Time.now)
+          schedule.add_recurrence_rule IceCubed::Rule.hourly.until(Date.today >> 1)
           schedule.add_recurrence_time Time.now + 123
           schedule.add_exception_time Time.now + 456
           expect { schedule.to_hash }.to_not raise_error

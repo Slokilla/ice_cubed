@@ -1,10 +1,10 @@
 require 'active_support/time'
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe IceCube::Schedule do
+describe IceCubed::Schedule do
 
   let(:start_time) { Time.now }
-  let(:schedule) { IceCube::Schedule.new(start_time) }
+  let(:schedule) { IceCubed::Schedule.new(start_time) }
   let(:yaml)     { described_class.dump(schedule) }
 
   describe "::dump(schedule)" do
