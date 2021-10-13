@@ -3,10 +3,11 @@
 [![Build Status](https://app.travis-ci.com/configua/ice_cubed.svg?branch=master)](https://app.travis-ci.com/configua/ice_cubed)
 [![Gem Version](https://badge.fury.io/rb/ice_cubed.svg)](http://badge.fury.io/rb/ice_cubed)
 
-## Forked from seejohnrun/ice_cube
+## Forked from [ice_cube](https://github.com/seejohnrun/ice_cube)
 
 Due to lack of support/maintenance on the original repo, this fork was created to allow the community to continue supporting this widely-used gem.
 
+## Getting Started
 
 ```bash
 gem install ice_cubed
