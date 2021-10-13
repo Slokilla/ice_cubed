@@ -16,7 +16,6 @@ rvm:
   - 2.6.8
   - 2.7.4
   - 3.0.0
-  - ruby-head
 env:
   - RAILS_VERSION='~> 5.2'
   - RAILS_VERSION='~> 6.0'
