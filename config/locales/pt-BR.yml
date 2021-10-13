@@ -1,5 +1,5 @@
 pt-BR:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ' / '
     not: 'exceto %{target}'
     not_on: 'exceto o dia %{target}'

@@ -1,5 +1,5 @@
 ru:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ' / '
     not: 'не %{target}'
     not_on: 'не в %{target}'

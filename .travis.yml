@@ -4,8 +4,7 @@ before_install:
   - gem install bundler
 notifications:
   email:
-    - john.crepezzi@gmail.com
-    - andrew@avit.ca
+    - jon.pascoe@me.com
 branches:
   only:
     - master

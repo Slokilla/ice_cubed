@@ -1,5 +1,5 @@
 fr:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ' / '
     not: 'pas %{target}'
     not_on: 'pas durant %{target}'

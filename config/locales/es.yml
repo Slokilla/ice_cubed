@@ -1,5 +1,5 @@
 es:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ', '
     not: 'excepto %{target}'
     not_on: 'excepto el %{target}'

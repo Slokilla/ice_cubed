@@ -1,5 +1,5 @@
 it:
-  ice_cube:
+  ice_cubed:
     pieces_connector: ' / '
     not: 'tranne %{target}'
     not_on: 'tranne %{target}'
