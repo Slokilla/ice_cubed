@@ -1,8 +1,9 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+# frozen_string_literal: true
+
+require "#{File.dirname(__FILE__)}/../spec_helper"
 
 module IceCubed
   describe FlexibleHash do
-
     subject(:hash) { described_class.new(:sym => true, "str" => true, 1 => true) }
 
     describe "#[]" do
@@ -67,6 +68,5 @@ module IceCubed
         expect(hash.delete(-1)).to be nil
       end
     end
-
   end
 end

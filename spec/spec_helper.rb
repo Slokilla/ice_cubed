@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
-require 'ice_cubed'
-require 'timeout'
+require "ice_cubed"
+require "timeout"
 
 begin
-  require 'simplecov'
+  require "simplecov"
   SimpleCov.start
 rescue LoadError
   # okay
@@ -15,10 +17,10 @@ DAY = Time.utc(2010, 3, 1)
 WEDNESDAY = Time.utc(2010, 6, 23, 5, 0, 0)
 
 WORLD_TIME_ZONES = [
-  'America/Anchorage',  # -1000 / -0900
-  'Europe/London',      # +0000 / +0100
-  'Pacific/Auckland',   # +1200 / +1300
-]
+  "America/Anchorage",  # -1000 / -0900
+  "Europe/London",      # +0000 / +0100
+  "Pacific/Auckland" # +1200 / +1300
+].freeze
 
 # TODO: enable warnings here and update specs to call IceCubed objects correctly
 def Object.const_missing(sym)
@@ -39,23 +41,23 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  Dir[File.dirname(__FILE__) + '/support/**/*'].each { |f| require f }
+  Dir["#{File.dirname(__FILE__)}/support/**/*"].sort.each { |f| require f }
 
   config.warnings = true
 
   config.include WarningHelpers
 
   config.before :each do |example|
-    if example.metadata[:requires_active_support]
-      raise 'ActiveSupport required but not present' unless defined?(ActiveSupport)
+    if example.metadata[:requires_active_support] && !defined?(ActiveSupport)
+      raise "ActiveSupport required but not present"
     end
   end
 
   config.around :each, system_time_zone: true do |example|
-    orig_zone = ENV['TZ']
-    ENV['TZ'] = example.metadata[:system_time_zone]
+    orig_zone = ENV["TZ"]
+    ENV["TZ"] = example.metadata[:system_time_zone]
     example.run
-    ENV['TZ'] = orig_zone
+    ENV["TZ"] = orig_zone
   end
 
   config.around :each, locale: true do |example|

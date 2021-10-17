@@ -1,77 +1,76 @@
+# frozen_string_literal: true
+
 module IceCubed
+  module Validations
+    module Day
+      def day(*days)
+        days = days.flatten
+        return self if days.empty?
 
-  module Validations::Day
+        days.flatten.each do |day|
+          unless day.is_a?(Integer) || day.is_a?(Symbol)
+            raise ArgumentError, "expecting Integer or Symbol value for day, got #{day.inspect}"
+          end
 
-    def day(*days)
-      days = days.flatten
-      return self if days.empty?
-      days.flatten.each do |day|
-        unless day.is_a?(Integer) || day.is_a?(Symbol)
-          raise ArgumentError, "expecting Integer or Symbol value for day, got #{day.inspect}"
+          day = TimeUtil.sym_to_wday(day)
+          verify_alignment(day, :wday, :day) { |error| raise error }
+
+          validations_for(:day) << Validation.new(day)
         end
-        day = TimeUtil.sym_to_wday(day)
-        verify_alignment(day, :wday, :day) { |error| raise error }
-
-        validations_for(:day) << Validation.new(day)
+        clobber_base_validations(:wday, :day)
+        self
       end
-      clobber_base_validations(:wday, :day)
-      self
+
+      class Validation < Validations::FixedValue
+        attr_reader :day
+        alias value day
+
+        def initialize(day)
+          @day = day
+        end
+
+        def key
+          :day
+        end
+
+        def type
+          :wday
+        end
+
+        def dst_adjust?
+          true
+        end
+
+        def build_s(builder)
+          builder.piece(:day) << day
+        end
+
+        def build_hash(builder)
+          builder.validations_array(:day) << day
+        end
+
+        def build_ical(builder)
+          ical_day = IcalBuilder.fixnum_to_ical_day(day)
+          # Only add if there aren't others from day_of_week that override
+          builder["BYDAY"] << ical_day if builder["BYDAY"].none? { |b| b.end_with?(ical_day) }
+        end
+
+        StringBuilder.register_formatter(:day) do |validation_days|
+          # sort the days
+          validation_days.sort!
+          # pick the right shortening, if applicable
+          case validation_days
+          when [0, 6]
+            IceCubed::I18n.t("ice_cubed.on_weekends")
+          when (1..5).to_a
+            IceCubed::I18n.t("ice_cubed.on_weekdays")
+          else
+            day_names = ->(d) { (IceCubed::I18n.t("ice_cubed.days_on")[d]).to_s }
+            segments = validation_days.map(&day_names)
+            IceCubed::I18n.t("ice_cubed.on_days", days: StringBuilder.sentence(segments))
+          end
+        end
+      end
     end
-
-    class Validation < Validations::FixedValue
-
-      attr_reader :day
-      alias :value :day
-
-      def initialize(day)
-        @day = day
-      end
-
-      def key
-        :day
-      end
-
-      def type
-        :wday
-      end
-
-      def dst_adjust?
-        true
-      end
-
-      def build_s(builder)
-        builder.piece(:day) << day
-      end
-
-      def build_hash(builder)
-        builder.validations_array(:day) << day
-      end
-
-      def build_ical(builder)
-        ical_day = IcalBuilder.fixnum_to_ical_day(day)
-        # Only add if there aren't others from day_of_week that override
-        if builder['BYDAY'].none? { |b| b.end_with?(ical_day) }
-          builder['BYDAY'] << ical_day
-        end
-      end
-
-      StringBuilder.register_formatter(:day) do |validation_days|
-        # sort the days
-        validation_days.sort!
-        # pick the right shortening, if applicable
-        if validation_days == [0, 6]
-          IceCubed::I18n.t('ice_cubed.on_weekends')
-        elsif validation_days == (1..5).to_a
-          IceCubed::I18n.t('ice_cubed.on_weekdays')
-        else
-          day_names = ->(d){ "#{IceCubed::I18n.t("ice_cubed.days_on")[d]}" }
-          segments = validation_days.map(&day_names)
-          IceCubed::I18n.t('ice_cubed.on_days', days: StringBuilder.sentence(segments))
-        end
-      end
-
-    end
-
   end
-
 end

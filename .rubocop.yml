@@ -1,0 +1,12 @@
+AllCops:
+  NewCops: enable
+
+Metrics/BlockLength:
+  IgnoredMethods:
+    - describe
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

@@ -1,13 +1,13 @@
-require 'delegate'
+# frozen_string_literal: true
+
+require "delegate"
 
 module IceCubed
-
   # Find keys by symbol or string without symbolizing user input
   # Due to the serialization format of ice_cubed, this limited implementation
   # is entirely sufficient
 
   class FlexibleHash < SimpleDelegator
-
     def [](key)
       key = _match_key(key)
       super
@@ -26,7 +26,8 @@ module IceCubed
     private
 
     def _match_key(key)
-      return key if __getobj__.has_key? key
+      return key if __getobj__.key? key
+
       if Symbol == key.class
         __getobj__.keys.detect { |k| return k if k == key.to_s }
       elsif String == key.class
@@ -34,7 +35,5 @@ module IceCubed
       end
       key
     end
-
   end
-
 end

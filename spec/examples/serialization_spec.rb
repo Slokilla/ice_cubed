@@ -1,14 +1,14 @@
-require 'active_support/time'
-require File.dirname(__FILE__) + '/../spec_helper'
+# frozen_string_literal: true
+
+require "active_support/time"
+require "#{File.dirname(__FILE__)}/../spec_helper"
 
 describe IceCubed::Schedule do
-
   let(:start_time) { Time.now }
   let(:schedule) { IceCubed::Schedule.new(start_time) }
   let(:yaml)     { described_class.dump(schedule) }
 
   describe "::dump(schedule)" do
-
     it "serializes a Schedule object as YAML string" do
       expect(yaml).to start_with "---\n"
     end
@@ -17,7 +17,7 @@ describe IceCubed::Schedule do
       let(:start_time) { Time.now.in_time_zone("America/Vancouver") }
 
       it "serializes time as a Hash" do
-        hash = YAML.load(yaml)
+        hash = YAML.safe_load(yaml)
         expect(hash[:start_time][:time]).to eq start_time.utc
         expect(hash[:start_time][:zone]).to eq "America/Vancouver"
       end
@@ -32,7 +32,6 @@ describe IceCubed::Schedule do
         end
       end
     end
-
   end
 
   describe "::load(yaml)" do
@@ -60,6 +59,5 @@ describe IceCubed::Schedule do
         end
       end
     end
-
   end
 end

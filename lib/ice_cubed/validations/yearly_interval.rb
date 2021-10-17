@@ -1,53 +1,49 @@
+# frozen_string_literal: true
+
 module IceCubed
-
-  module Validations::YearlyInterval
-
-    def interval(interval)
-      @interval = normalized_interval(interval)
-      replace_validations_for(:interval, [Validation.new(@interval)])
-      clobber_base_validations(:year)
-      self
-    end
-
-    class Validation
-
-      attr_reader :interval
-
-      def initialize(interval)
-        @interval = interval
+  module Validations
+    module YearlyInterval
+      def interval(interval)
+        @interval = normalized_interval(interval)
+        replace_validations_for(:interval, [Validation.new(@interval)])
+        clobber_base_validations(:year)
+        self
       end
 
-      def type
-        :year
-      end
+      class Validation
+        attr_reader :interval
 
-      def dst_adjust?
-        true
-      end
+        def initialize(interval)
+          @interval = interval
+        end
 
-      def validate(step_time, start_time)
-        years = step_time.year - start_time.year
-        offset = (years % interval).nonzero?
-        interval - offset if offset
-      end
+        def type
+          :year
+        end
 
-      def build_s(builder)
-        builder.base = IceCubed::I18n.t('ice_cubed.each_year', count: interval)
-      end
+        def dst_adjust?
+          true
+        end
 
-      def build_hash(builder)
-        builder[:interval] = interval
-      end
+        def validate(step_time, start_time)
+          years = step_time.year - start_time.year
+          offset = (years % interval).nonzero?
+          interval - offset if offset
+        end
 
-      def build_ical(builder)
-        builder['FREQ'] << 'YEARLY'
-        unless interval == 1
-          builder['INTERVAL'] << interval
+        def build_s(builder)
+          builder.base = IceCubed::I18n.t("ice_cubed.each_year", count: interval)
+        end
+
+        def build_hash(builder)
+          builder[:interval] = interval
+        end
+
+        def build_ical(builder)
+          builder["FREQ"] << "YEARLY"
+          builder["INTERVAL"] << interval unless interval == 1
         end
       end
-
     end
-
   end
-
 end

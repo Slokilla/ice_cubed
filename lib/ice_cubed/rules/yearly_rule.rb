@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 module IceCubed
-
   class YearlyRule < ValidatedRule
-
     include Validations::HourOfDay
     include Validations::MinuteOfHour
     include Validations::SecondOfMinute
@@ -19,7 +19,5 @@ module IceCubed
       schedule_lock(:month, :day, :hour, :min, :sec)
       reset
     end
-
   end
-
 end

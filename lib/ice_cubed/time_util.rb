@@ -1,31 +1,32 @@
-require 'date'
-require 'time'
+# frozen_string_literal: true
+
+require "date"
+require "time"
 
 module IceCubed
   module TimeUtil
-
     extend Deprecated
 
     DAYS = {
-      :sunday => 0, :monday => 1, :tuesday => 2, :wednesday => 3,
-      :thursday => 4, :friday => 5, :saturday => 6
-    }
+      sunday: 0, monday: 1, tuesday: 2, wednesday: 3,
+      thursday: 4, friday: 5, saturday: 6
+    }.freeze
 
     ICAL_DAYS = {
-      'SU' => :sunday, 'MO' => :monday, 'TU' => :tuesday, 'WE' => :wednesday,
-      'TH' => :thursday, 'FR' => :friday, 'SA' => :saturday
-    }
+      "SU" => :sunday, "MO" => :monday, "TU" => :tuesday, "WE" => :wednesday,
+      "TH" => :thursday, "FR" => :friday, "SA" => :saturday
+    }.freeze
 
     MONTHS = {
-      :january => 1, :february => 2, :march => 3, :april => 4, :may => 5,
-      :june => 6, :july => 7, :august => 8, :september => 9, :october => 10,
-      :november => 11, :december => 12
-    }
+      january: 1, february: 2, march: 3, april: 4, may: 5,
+      june: 6, july: 7, august: 8, september: 9, october: 10,
+      november: 11, december: 12
+    }.freeze
 
-    CLOCK_VALUES = [:year, :month, :day, :hour, :min, :sec]
+    CLOCK_VALUES = %i[year month day hour min sec].freeze
 
     # Provides a Time.now without the usec, in the reference zone or utc offset
-    def self.now(reference=Time.now)
+    def self.now(reference = Time.now)
       match_zone(Time.at(Time.now.to_i), reference)
     end
 
@@ -43,35 +44,32 @@ module IceCubed
 
     def self.match_zone(input_time, reference)
       return unless time = ensure_time(input_time, reference)
+
       time = if reference.respond_to? :time_zone
                time.in_time_zone(reference.time_zone)
+             elsif reference.utc?
+               time.getgm
+             elsif reference.zone
+               time.getlocal
              else
-               if reference.utc?
-                 time.getgm
-               elsif reference.zone
-                 time.getlocal
-               else
-                 time.getlocal(reference.utc_offset)
-               end
+               time.getlocal(reference.utc_offset)
              end
-      (Date === input_time) ? beginning_of_date(time, reference) : time
+      input_time.is_a?(Date) ? beginning_of_date(time, reference) : time
     end
 
     # Ensure that this is either nil, or a time
     def self.ensure_time(time, reference = nil, date_eod = false)
       case time
       when DateTime
-        warn "IceCubed: DateTime support is deprecated (please use Time) at: #{ caller[2] }"
+        warn "IceCubed: DateTime support is deprecated (please use Time) at: #{caller[2]}"
         Time.local(time.year, time.month, time.day, time.hour, time.min, time.sec)
       when Date
         if date_eod
           end_of_date(time, reference)
+        elsif reference
+          build_in_zone([time.year, time.month, time.day], reference)
         else
-          if reference
-            build_in_zone([time.year, time.month, time.day], reference)
-          else
-            time.to_time
-          end
+          time.to_time
         end
       else
         time
@@ -83,7 +81,7 @@ module IceCubed
       case date
       when Date then date
       else
-        return Date.new(date.year, date.month, date.day)
+        Date.new(date.year, date.month, date.day)
       end
     end
 
@@ -92,7 +90,7 @@ module IceCubed
       case time
       when Time, Date
         if time.respond_to?(:time_zone)
-          {:time => time.utc, :zone => time.time_zone.name}
+          { time: time.utc, zone: time.time_zone.name }
         else
           time
         end
@@ -134,17 +132,18 @@ module IceCubed
     def self.restore_deserialized_offset(time, orig_offset_str)
       return time if time.respond_to?(:time_zone) ||
                      time.getlocal(orig_offset_str).utc_offset == time.utc_offset
-      warn "IceCubed: parsed Time from nonlocal TZ. Use ActiveSupport to fix DST at: #{ caller[0] }"
+
+      warn "IceCubed: parsed Time from nonlocal TZ. Use ActiveSupport to fix DST at: #{caller[0]}"
       time.localtime(orig_offset_str)
     end
 
     # Get the beginning of a date
-    def self.beginning_of_date(date, reference=Time.now)
+    def self.beginning_of_date(date, reference = Time.now)
       build_in_zone([date.year, date.month, date.day, 0, 0, 0], reference)
     end
 
     # Get the end of a date
-    def self.end_of_date(date, reference=Time.now)
+    def self.end_of_date(date, reference = Time.now)
       build_in_zone([date.year, date.month, date.day, 23, 59, 59], reference)
     end
 
@@ -152,8 +151,8 @@ module IceCubed
     def self.sym_to_month(sym)
       MONTHS.fetch(sym) do |k|
         MONTHS.values.detect { |i| i.to_s == k.to_s } or
-        raise ArgumentError, "Expecting Integer or Symbol value for month. " \
-                             "No such month: #{k.inspect}"
+          raise ArgumentError, "Expecting Integer or Symbol value for month. " \
+                               "No such month: #{k.inspect}"
       end
     end
     deprecated_alias :symbol_to_month, :sym_to_month
@@ -162,8 +161,8 @@ module IceCubed
     def self.sym_to_wday(sym)
       DAYS.fetch(sym) do |k|
         DAYS.values.detect { |i| i.to_s == k.to_s } or
-        raise ArgumentError, "Expecting Integer or Symbol value for weekday. " \
-                             "No such weekday: #{k.inspect}"
+          raise ArgumentError, "Expecting Integer or Symbol value for weekday. " \
+                               "No such weekday: #{k.inspect}"
       end
     end
     deprecated_alias :symbol_to_day, :sym_to_wday
@@ -171,6 +170,7 @@ module IceCubed
     # Convert wday number to day symbol
     def self.wday_to_sym(wday)
       return wday if DAYS.keys.include? wday
+
       DAYS.invert.fetch(wday) do |i|
         raise ArgumentError, "Expecting Integer value for weekday. " \
                              "No such wday number: #{i.inspect}"
@@ -186,15 +186,16 @@ module IceCubed
     def self.ical_day_to_symbol(str)
       day = ICAL_DAYS[str]
       raise ArgumentError, "Invalid day: #{str}" if day.nil?
+
       day
     end
 
     # Return the count of the number of times wday appears in the month,
     # and which of those time falls on
-    def self.which_occurrence_in_month(time, wday)
-      first_occurrence = ((7 - Time.utc(time.year, time.month, 1).wday) + time.wday) % 7 + 1
+    def self.which_occurrence_in_month(time, _wday)
+      first_occurrence = (((7 - Time.utc(time.year, time.month, 1).wday) + time.wday) % 7) + 1
       this_weekday_in_month_count = ((days_in_month(time) - first_occurrence + 1) / 7.0).ceil
-      nth_occurrence_of_weekday = (time.mday - first_occurrence) / 7 + 1
+      nth_occurrence_of_weekday = ((time.mday - first_occurrence) / 7) + 1
       [nth_occurrence_of_weekday, this_weekday_in_month_count]
     end
 
@@ -221,7 +222,7 @@ module IceCubed
     # into the next month. Accepts days from positive (start of month forward) or
     # negative (from end of month)
     def self.day_of_month(value, date)
-      if value.to_i > 0
+      if value.to_i.positive?
         [value, days_in_month(date)].min
       else
         [1 + days_in_month(date) + value, 1].max
@@ -237,7 +238,7 @@ module IceCubed
     # Number of days to n years
     def self.days_in_n_years(time, year_distance)
       date = Date.new(time.year, time.month, time.day)
-      ((date >> year_distance * 12) - date).to_i
+      ((date >> (year_distance * 12)) - date).to_i
     end
 
     # The number of days in n months
@@ -248,9 +249,7 @@ module IceCubed
 
     def self.dst_change(time)
       one_hour_ago = time - ONE_HOUR
-      if time.dst? ^ one_hour_ago.dst?
-        (time.utc_offset - one_hour_ago.utc_offset) / ONE_HOUR
-      end
+      (time.utc_offset - one_hour_ago.utc_offset) / ONE_HOUR if time.dst? ^ one_hour_ago.dst?
     end
 
     # Handle discrepancies between various time types
@@ -270,20 +269,20 @@ module IceCubed
 
     # A utility class for safely moving time around
     class TimeWrapper
-
       def initialize(time, dst_adjust = true)
         @dst_adjust = dst_adjust
         @base = time
-        if dst_adjust
-          @time = Time.utc(time.year, time.month, time.day, time.hour, time.min, time.sec + TimeUtil.subsec(time))
-        else
-          @time = time
-        end
+        @time = if dst_adjust
+                  Time.utc(time.year, time.month, time.day, time.hour, time.min, time.sec + TimeUtil.subsec(time))
+                else
+                  time
+                end
       end
 
       # Get the wrapped time back in its original zone & format
       def to_time
         return @time unless @dst_adjust
+
         parts = @time.year, @time.month, @time.day, @time.hour, @time.min, @time.sec + @time.subsec
         TimeUtil.build_in_zone(parts, @base)
       end
@@ -302,11 +301,12 @@ module IceCubed
       end
 
       # Clear everything below a certain type
-      CLEAR_ORDER = [:sec, :min, :hour, :day, :month, :year]
+      CLEAR_ORDER = %i[sec min hour day month year].freeze
       def clear_below(type)
         type = :day if type == :wday
         CLEAR_ORDER.each do |ptype|
           break if ptype == type
+
           send :"clear_#{ptype}"
         end
       end
@@ -320,19 +320,19 @@ module IceCubed
       end
 
       def sec=(value)
-        @time += (value) - (@time.sec)
+        @time += value - @time.sec
       end
 
       def clear_sec
-        @time.sec > 0 ? @time -= @time.sec : @time
+        @time.sec.positive? ? @time -= @time.sec : @time
       end
 
       def clear_min
-        @time.min > 0 ? @time -= (@time.min * ONE_MINUTE) : @time
+        @time.min.positive? ? @time -= (@time.min * ONE_MINUTE) : @time
       end
 
       def clear_hour
-        @time.hour > 0 ? @time -= (@time.hour * ONE_HOUR) : @time
+        @time.hour.positive? ? @time -= (@time.hour * ONE_HOUR) : @time
       end
 
       # Move to the first of the month, 0 hours
@@ -343,13 +343,9 @@ module IceCubed
       # Clear to january 1st
       def clear_month
         @time -= ONE_DAY
-        until @time.month == 12
-          @time -= TimeUtil.days_in_month(@time) * ONE_DAY
-        end
+        @time -= TimeUtil.days_in_month(@time) * ONE_DAY until @time.month == 12
         @time += ONE_DAY
       end
-
     end
-
   end
 end
