@@ -88,3 +88,7 @@ module IceCubed
     @compatibility = version
   end
 end
+
+module IceCube
+  include IceCubed
+end
