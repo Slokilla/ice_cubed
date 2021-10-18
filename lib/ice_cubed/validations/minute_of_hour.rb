@@ -1,12 +1,8 @@
 module IceCubed
-
   module Validations::MinuteOfHour
-
     def minute_of_hour(*minutes)
       minutes.flatten.each do |minute|
-        unless minute.is_a?(Integer)
-          raise ArgumentError, "expecting Integer value for minute, got #{minute.inspect}"
-        end
+        raise ArgumentError, "expecting Integer value for minute, got #{minute.inspect}" unless minute.is_a?(Integer)
 
         verify_alignment(minute, :min, :minute_of_hour) { |error| raise error }
 
@@ -26,9 +22,8 @@ module IceCubed
     end
 
     class Validation < Validations::FixedValue
-
       attr_reader :minute
-      alias :value :minute
+      alias value minute
 
       def initialize(minute)
         @minute = minute
@@ -55,16 +50,13 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['BYMINUTE'] << minute
+        builder["BYMINUTE"] << minute
       end
 
       StringBuilder.register_formatter(:minute_of_hour) do |segments|
         str = StringBuilder.sentence(segments)
-        IceCubed::I18n.t('ice_cubed.on_minutes_of_hour', count: segments.size, segments: str)
+        IceCubed::I18n.t("ice_cubed.on_minutes_of_hour", count: segments.size, segments: str)
       end
-
     end
-
   end
-
 end

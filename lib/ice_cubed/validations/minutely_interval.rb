@@ -1,7 +1,5 @@
 module IceCubed
-
   module Validations::MinutelyInterval
-
     def interval(interval)
       verify_alignment(interval, :min, :interval) { |error| raise error }
 
@@ -12,7 +10,6 @@ module IceCubed
     end
 
     class Validation
-
       attr_reader :interval
 
       def initialize(interval)
@@ -28,7 +25,8 @@ module IceCubed
       end
 
       def validate(step_time, start_time)
-        t0, t1 = start_time.to_i, step_time.to_i
+        t0 = start_time.to_i
+        t1 = step_time.to_i
         sec = (t1 - t1 % ONE_MINUTE) -
               (t0 - t0 % ONE_MINUTE)
         minutes = sec / ONE_MINUTE
@@ -37,7 +35,7 @@ module IceCubed
       end
 
       def build_s(builder)
-        builder.base = IceCubed::I18n.t('ice_cubed.each_minute', count: interval)
+        builder.base = IceCubed::I18n.t("ice_cubed.each_minute", count: interval)
       end
 
       def build_hash(builder)
@@ -45,12 +43,9 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['FREQ'] << 'MINUTELY'
-        builder['INTERVAL'] << interval unless interval == 1
+        builder["FREQ"] << "MINUTELY"
+        builder["INTERVAL"] << interval unless interval == 1
       end
-
     end
-
   end
-
 end

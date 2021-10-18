@@ -1,7 +1,5 @@
 module IceCubed
-
   module Validations::SecondlyInterval
-
     def interval(interval)
       verify_alignment(interval, :sec, :interval) { |error| raise error }
 
@@ -12,7 +10,6 @@ module IceCubed
     end
 
     class Validation
-
       attr_reader :interval
 
       def initialize(interval)
@@ -42,12 +39,9 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['FREQ'] << 'SECONDLY'
-        builder['INTERVAL'] << interval unless interval == 1
+        builder["FREQ"] << "SECONDLY"
+        builder["INTERVAL"] << interval unless interval == 1
       end
-
     end
-
   end
-
 end

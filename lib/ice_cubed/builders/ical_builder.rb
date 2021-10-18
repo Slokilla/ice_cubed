@@ -1,8 +1,6 @@
 module IceCubed
-
   class IcalBuilder
-
-    ICAL_DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
+    ICAL_DAYS = %w[SU MO TU WE TH FR SA].freeze
 
     def initialize
       @hash = {}
@@ -19,20 +17,18 @@ module IceCubed
     # Build for a single rule entry
     def to_s
       arr = []
-      if freq = @hash.delete('FREQ')
+      if freq = @hash.delete("FREQ")
         arr << "FREQ=#{freq.join(',')}"
       end
       arr.concat(@hash.map do |key, value|
-        if value.is_a?(Array)
-          "#{key}=#{value.join(',')}"
-        end
+        "#{key}=#{value.join(',')}" if value.is_a?(Array)
       end.compact)
-      arr.join(';')
+      arr.join(";")
     end
 
     def self.ical_utc_format(time)
       time = time.dup.utc
-      IceCubed::I18n.l(time, format: '%Y%m%dT%H%M%SZ') # utc time
+      IceCubed::I18n.l(time, format: "%Y%m%dT%H%M%SZ") # utc time
     end
 
     def self.ical_format(time, force_utc)
@@ -47,13 +43,11 @@ module IceCubed
     def self.ical_duration(duration)
       hours = duration / 3600; duration %= 3600
       minutes = duration / 60; duration %= 60
-      repr = ''
+      repr = ""
       repr << "#{hours}H" if hours > 0
       repr << "#{minutes}M" if minutes > 0
       repr << "#{duration}S" if duration > 0
       "PT#{repr}"
     end
-
   end
-
 end

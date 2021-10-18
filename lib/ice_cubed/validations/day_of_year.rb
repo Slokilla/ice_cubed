@@ -1,12 +1,9 @@
 module IceCubed
-
   module Validations::DayOfYear
-
     def day_of_year(*days)
       days.flatten.each do |day|
-        unless day.is_a?(Integer)
-          raise ArgumentError, "expecting Integer value for day, got #{day.inspect}"
-        end
+        raise ArgumentError, "expecting Integer value for day, got #{day.inspect}" unless day.is_a?(Integer)
+
         validations_for(:day_of_year) << Validation.new(day)
       end
       clobber_base_validations(:month, :day, :wday)
@@ -14,7 +11,6 @@ module IceCubed
     end
 
     class Validation
-
       attr_reader :day
 
       def initialize(day)
@@ -29,7 +25,7 @@ module IceCubed
         true
       end
 
-      def validate(step_time, start_time)
+      def validate(step_time, _start_time)
         days_in_year = TimeUtil.days_in_year(step_time)
         yday = day < 0 ? day + days_in_year + 1 : day
         offset = yday - step_time.yday
@@ -45,17 +41,14 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['BYYEARDAY'] << day
+        builder["BYYEARDAY"] << day
       end
 
       StringBuilder.register_formatter(:day_of_year) do |entries|
-        str =  StringBuilder.sentence(entries)
-        sentence = IceCubed::I18n.t('ice_cubed.days_of_year', count: entries.size, segments: str)
-        IceCubed::I18n.t('ice_cubed.on', sentence: sentence)
+        str = StringBuilder.sentence(entries)
+        sentence = IceCubed::I18n.t("ice_cubed.days_of_year", count: entries.size, segments: str)
+        IceCubed::I18n.t("ice_cubed.on", sentence: sentence)
       end
-
     end
-
   end
-
 end

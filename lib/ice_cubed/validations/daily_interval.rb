@@ -1,7 +1,5 @@
 module IceCubed
-
   module Validations::DailyInterval
-
     # Add a new interval validation
     def interval(interval)
       interval = normalized_interval(interval)
@@ -15,7 +13,6 @@ module IceCubed
     end
 
     class Validation
-
       attr_reader :interval
 
       def initialize(interval)
@@ -31,7 +28,8 @@ module IceCubed
       end
 
       def validate(step_time, start_time)
-        t0, t1 = start_time, step_time
+        t0 = start_time
+        t1 = step_time
         days = Date.new(t1.year, t1.month, t1.day) -
                Date.new(t0.year, t0.month, t0.day)
         offset = (days % interval).nonzero?
@@ -39,7 +37,7 @@ module IceCubed
       end
 
       def build_s(builder)
-        builder.base = IceCubed::I18n.t('ice_cubed.each_day', count: interval)
+        builder.base = IceCubed::I18n.t("ice_cubed.each_day", count: interval)
       end
 
       def build_hash(builder)
@@ -47,12 +45,9 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['FREQ'] << 'DAILY'
-        builder['INTERVAL'] << interval unless interval == 1
+        builder["FREQ"] << "DAILY"
+        builder["INTERVAL"] << interval unless interval == 1
       end
-
     end
-
   end
-
 end

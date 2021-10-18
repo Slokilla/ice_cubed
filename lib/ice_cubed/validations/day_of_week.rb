@@ -1,7 +1,5 @@
 module IceCubed
-
   module Validations::DayOfWeek
-
     def day_of_week(dows)
       dows.each do |day, occs|
         occs.each do |occ|
@@ -14,7 +12,6 @@ module IceCubed
     end
 
     class Validation
-
       attr_reader :day, :occ
 
       def initialize(day, occ)
@@ -30,15 +27,16 @@ module IceCubed
         true
       end
 
-      def validate(step_time, start_time)
+      def validate(step_time, _start_time)
         wday = step_time.wday
-        offset = (day < wday) ? (7 - wday + day) : (day - wday)
+        offset = day < wday ? (7 - wday + day) : (day - wday)
         wrapper = TimeUtil::TimeWrapper.new(step_time)
         wrapper.add :day, offset
         loop do
           which_occ, num_occ = TimeUtil.which_occurrence_in_month(wrapper.to_time, day)
-          this_occ = (occ < 0) ? (num_occ + occ + 1) : (occ)
+          this_occ = occ < 0 ? (num_occ + occ + 1) : occ
           break offset if which_occ == this_occ
+
           wrapper.add :day, 7
           offset += 7
         end
@@ -46,9 +44,9 @@ module IceCubed
 
       def build_s(builder)
         builder.piece(:day_of_week) << IceCubed::I18n.t(
-          'ice_cubed.days_of_week',
+          "ice_cubed.days_of_week",
           segments: StringBuilder.nice_number(occ),
-          day: IceCubed::I18n.t('date.day_names')[day]
+          day: IceCubed::I18n.t("date.day_names")[day]
         )
       end
 
@@ -61,17 +59,14 @@ module IceCubed
       def build_ical(builder)
         ical_day = IcalBuilder.fixnum_to_ical_day(day)
         # Delete any with this day and no occ first
-        builder['BYDAY'].delete_if { |d| d == ical_day }
-        builder['BYDAY'] << "#{occ}#{ical_day}"
+        builder["BYDAY"].delete_if { |d| d == ical_day }
+        builder["BYDAY"] << "#{occ}#{ical_day}"
       end
 
       StringBuilder.register_formatter(:day_of_week) do |segments|
-        sentence = segments.join(IceCubed::I18n.t('ice_cubed.array.two_words_connector'))
-        IceCubed::I18n.t('ice_cubed.on', sentence: sentence)
+        sentence = segments.join(IceCubed::I18n.t("ice_cubed.array.two_words_connector"))
+        IceCubed::I18n.t("ice_cubed.on", sentence: sentence)
       end
-
     end
-
   end
-
 end

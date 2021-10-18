@@ -1,13 +1,9 @@
 module IceCubed
-
   module Validations::HourOfDay
-
     # Add hour of day validations
     def hour_of_day(*hours)
       hours.flatten.each do |hour|
-        unless hour.is_a?(Integer)
-          raise ArgumentError, "expecting Integer value for hour, got #{hour.inspect}"
-        end
+        raise ArgumentError, "expecting Integer value for hour, got #{hour.inspect}" unless hour.is_a?(Integer)
 
         verify_alignment(hour, :hour, :hour_of_day) { |error| raise error }
 
@@ -19,6 +15,7 @@ module IceCubed
 
     def realign(opening_time, start_time)
       return super unless validations[:hour_of_day]
+
       freq = base_interval_validation.interval
 
       first_hour = Array(validations[:hour_of_day]).min_by(&:value)
@@ -34,9 +31,8 @@ module IceCubed
     end
 
     class Validation < Validations::FixedValue
-
       attr_reader :hour
-      alias :value :hour
+      alias value hour
 
       def initialize(hour)
         @hour = hour
@@ -63,16 +59,13 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['BYHOUR'] << hour
+        builder["BYHOUR"] << hour
       end
 
       StringBuilder.register_formatter(:hour_of_day) do |segments|
         str = StringBuilder.sentence(segments)
-        IceCubed::I18n.t('ice_cubed.at_hours_of_the_day', count: segments.size, segments: str)
+        IceCubed::I18n.t("ice_cubed.at_hours_of_the_day", count: segments.size, segments: str)
       end
-
     end
-
   end
-
 end

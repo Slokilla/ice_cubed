@@ -1,12 +1,8 @@
 module IceCubed
-
   module Validations::SecondOfMinute
-
     def second_of_minute(*seconds)
       seconds.flatten.each do |second|
-        unless second.is_a?(Integer)
-          raise ArgumentError, "Expecting Integer value for second, got #{second.inspect}"
-        end
+        raise ArgumentError, "Expecting Integer value for second, got #{second.inspect}" unless second.is_a?(Integer)
 
         verify_alignment(second, :sec, :second_of_minute) { |error| raise error }
 
@@ -26,9 +22,8 @@ module IceCubed
     end
 
     class Validation < Validations::FixedValue
-
       attr_reader :second
-      alias :value :second
+      alias value second
 
       def initialize(second)
         @second = second
@@ -55,16 +50,13 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['BYSECOND'] << second
+        builder["BYSECOND"] << second
       end
 
       StringBuilder.register_formatter(:second_of_minute) do |segments|
         str = StringBuilder.sentence(segments)
-        IceCubed::I18n.t('ice_cubed.on_seconds_of_minute', count: segments.size, segments: str)
+        IceCubed::I18n.t("ice_cubed.on_seconds_of_minute", count: segments.size, segments: str)
       end
-
     end
-
   end
-
 end

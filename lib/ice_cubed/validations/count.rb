@@ -1,7 +1,5 @@
 module IceCubed
-
   module Validations::Count
-
     # Value reader for limit
     def occurrence_count
       (arr = @validations[:count]) && (val = arr[0]) && val.count
@@ -11,12 +9,12 @@ module IceCubed
       unless max.nil? || max.is_a?(Integer)
         raise ArgumentError, "Expecting Integer or nil value for count, got #{max.inspect}"
       end
+
       replace_validations_for(:count, max && [Validation.new(max, self)])
       self
     end
 
     class Validation
-
       attr_reader :rule, :count
 
       def initialize(count, rule)
@@ -32,7 +30,7 @@ module IceCubed
         false
       end
 
-      def validate(time, start_time)
+      def validate(_time, _start_time)
         raise CountExceeded if rule.uses && rule.uses >= count
       end
 
@@ -45,16 +43,13 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['COUNT'] << count
+        builder["COUNT"] << count
       end
 
       StringBuilder.register_formatter(:count) do |segments|
         count = segments.first
-        IceCubed::I18n.t('ice_cubed.times', count: count)
+        IceCubed::I18n.t("ice_cubed.times", count: count)
       end
-
     end
-
   end
-
 end

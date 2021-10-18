@@ -1,18 +1,15 @@
-require 'yaml'
+require "yaml"
 
 module IceCubed
-
   class Rule
-
-    INTERVAL_TYPES = [
-      :secondly, :minutely, :hourly,
-      :daily, :weekly, :monthly, :yearly
-    ]
+    INTERVAL_TYPES = %i[
+      secondly minutely hourly
+      daily weekly monthly yearly
+    ].freeze
 
     attr_reader :uses
 
-    def reset
-    end
+    def reset; end
 
     # Is this a terminating schedule?
     def terminating?
@@ -21,6 +18,7 @@ module IceCubed
 
     def ==(other)
       return false unless other.is_a? Rule
+
       hash == other.hash
     end
 
@@ -39,51 +37,45 @@ module IceCubed
 
     # Yaml implementation
     def to_yaml(*args)
-      YAML::dump(to_hash, *args)
+      YAML.dump(to_hash, *args)
     end
 
     # From yaml
     def self.from_yaml(yaml)
-      from_hash YAML::load(yaml)
+      from_hash YAML.load(yaml)
     end
 
     def to_hash
       raise MethodNotImplemented, "Expected to be overridden by subclasses"
     end
 
-    def next_time(time, schedule, closing_time)
-    end
+    def next_time(time, schedule, closing_time); end
 
     def on?(time, schedule)
       next_time(time, schedule, time).to_i == time.to_i
     end
 
     class << self
-
       # Convert from a hash and create a rule
       def from_hash(original_hash)
         hash = IceCubed::FlexibleHash.new original_hash
 
-        unless hash[:rule_type] && match = hash[:rule_type].match(/\:\:(.+?)Rule/)
-          raise ArgumentError, 'Invalid rule type'
+        unless hash[:rule_type] && match = hash[:rule_type].match(/::(.+?)Rule/)
+          raise ArgumentError, "Invalid rule type"
         end
 
         interval_type = match[1].downcase.to_sym
 
-        unless INTERVAL_TYPES.include?(interval_type)
-          raise ArgumentError, "Invalid rule frequency type: #{match[1]}"
-        end
+        raise ArgumentError, "Invalid rule frequency type: #{match[1]}" unless INTERVAL_TYPES.include?(interval_type)
 
         rule = IceCubed::Rule.send(interval_type, hash[:interval] || 1)
 
-        if match[1] == "Weekly"
-          rule.interval(hash[:interval] || 1, TimeUtil.wday_to_sym(hash[:week_start] || 0))
-        end
+        rule.interval(hash[:interval] || 1, TimeUtil.wday_to_sym(hash[:week_start] || 0)) if match[1] == "Weekly"
 
         rule.until(TimeUtil.deserialize_time(hash[:until])) if hash[:until]
         rule.count(hash[:count]) if hash[:count]
 
-        hash[:validations] && hash[:validations].each do |name, args|
+        hash[:validations]&.each do |name, args|
           apply_validation(rule, name, args)
         end
 
@@ -101,12 +93,10 @@ module IceCubed
 
         args.is_a?(Array) ? rule.send(name, *args) : rule.send(name, args)
       end
-
     end
 
     # Convenience methods for creating Rules
     class << self
-
       # Secondly Rule
       def secondly(interval = 1)
         SecondlyRule.new(interval)
@@ -141,9 +131,6 @@ module IceCubed
       def yearly(interval = 1)
         YearlyRule.new(interval)
       end
-
     end
-
   end
-
 end

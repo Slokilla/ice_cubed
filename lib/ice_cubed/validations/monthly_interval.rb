@@ -1,7 +1,5 @@
 module IceCubed
-
   module Validations::MonthlyInterval
-
     def interval(interval)
       interval = normalized_interval(interval)
       verify_alignment(interval, :month, :interval) { |error| raise error }
@@ -13,7 +11,6 @@ module IceCubed
     end
 
     class Validation
-
       attr_reader :interval
 
       def initialize(interval)
@@ -29,7 +26,8 @@ module IceCubed
       end
 
       def validate(step_time, start_time)
-        t0, t1 = start_time, step_time
+        t0 = start_time
+        t1 = step_time
         months = (t1.month - t0.month) +
                  (t1.year - t0.year) * 12
         offset = (months % interval).nonzero?
@@ -37,7 +35,7 @@ module IceCubed
       end
 
       def build_s(builder)
-        builder.base = IceCubed::I18n.t('ice_cubed.each_month', count: interval)
+        builder.base = IceCubed::I18n.t("ice_cubed.each_month", count: interval)
       end
 
       def build_hash(builder)
@@ -45,12 +43,9 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['FREQ'] << 'MONTHLY'
-        builder['INTERVAL'] << interval unless interval == 1
+        builder["FREQ"] << "MONTHLY"
+        builder["INTERVAL"] << interval unless interval == 1
       end
-
     end
-
   end
-
 end

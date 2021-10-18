@@ -1,7 +1,5 @@
 module IceCubed
-
   class MinutelyRule < ValidatedRule
-
     include Validations::HourOfDay
     include Validations::MinuteOfHour
     include Validations::SecondOfMinute
@@ -19,7 +17,5 @@ module IceCubed
       schedule_lock(:sec)
       reset
     end
-
   end
-
 end

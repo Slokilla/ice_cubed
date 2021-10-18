@@ -1,12 +1,9 @@
 module IceCubed
-
   module Validations::DayOfMonth
-
     def day_of_month(*days)
       days.flatten.each do |day|
-        unless day.is_a?(Integer)
-          raise ArgumentError, "expecting Integer value for day, got #{day.inspect}"
-        end
+        raise ArgumentError, "expecting Integer value for day, got #{day.inspect}" unless day.is_a?(Integer)
+
         verify_alignment(day, :day, :day_of_month) { |error| raise error }
         validations_for(:day_of_month) << Validation.new(day)
       end
@@ -15,9 +12,8 @@ module IceCubed
     end
 
     class Validation < Validations::FixedValue
-
       attr_reader :day
-      alias :value :day
+      alias value day
 
       def initialize(day)
         @day = day
@@ -44,17 +40,14 @@ module IceCubed
       end
 
       def build_ical(builder)
-        builder['BYMONTHDAY'] << day
+        builder["BYMONTHDAY"] << day
       end
 
       StringBuilder.register_formatter(:day_of_month) do |entries|
         sentence = StringBuilder.sentence(entries)
-        str = IceCubed::I18n.t('ice_cubed.days_of_month', count: entries.size, segments: sentence)
-        IceCubed::I18n.t('ice_cubed.on', sentence: str)
+        str = IceCubed::I18n.t("ice_cubed.days_of_month", count: entries.size, segments: sentence)
+        IceCubed::I18n.t("ice_cubed.on", sentence: str)
       end
-
     end
-
   end
-
 end

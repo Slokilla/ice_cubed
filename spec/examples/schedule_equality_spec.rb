@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 module IceCubed
   describe Schedule do
@@ -52,7 +52,7 @@ module IceCubed
       end
 
       context "with ActiveSupport", requires_active_support: true do
-        require 'active_support/time'
+        require "active_support/time"
         let(:utc_tz) { ActiveSupport::TimeZone["Etc/UTC"] }
         let(:pst_tz) { ActiveSupport::TimeZone["America/Vancouver"] }
         let(:est_tz) { ActiveSupport::TimeZone["America/New_York"] }
@@ -108,6 +108,5 @@ module IceCubed
         should be false
       end
     end
-
   end
 end
