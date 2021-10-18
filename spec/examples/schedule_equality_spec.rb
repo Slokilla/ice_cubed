@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-require "spec_helper"
+require 'spec_helper'
 
 module IceCubed
   describe Schedule do
@@ -54,7 +52,7 @@ module IceCubed
       end
 
       context "with ActiveSupport", requires_active_support: true do
-        require "active_support/time"
+        require 'active_support/time'
         let(:utc_tz) { ActiveSupport::TimeZone["Etc/UTC"] }
         let(:pst_tz) { ActiveSupport::TimeZone["America/Vancouver"] }
         let(:est_tz) { ActiveSupport::TimeZone["America/New_York"] }
@@ -95,9 +93,9 @@ module IceCubed
       it "should be true with same extimes in different order" do
         s1.rrule Rule.hourly
         s1.extime t0 + ONE_HOUR
-        s1.extime t0 + (3 * ONE_HOUR)
+        s1.extime t0 + 3 * ONE_HOUR
         s2.rrule Rule.hourly
-        s2.extime t0 + (3 * ONE_HOUR)
+        s2.extime t0 + 3 * ONE_HOUR
         s2.extime t0 + ONE_HOUR
         should be true
       end
@@ -106,9 +104,10 @@ module IceCubed
         s1.rrule Rule.hourly
         s1.extime t0 + ONE_HOUR
         s1.rrule Rule.hourly
-        s2.extime t0 + (3 * ONE_HOUR)
+        s2.extime t0 + 3 * ONE_HOUR
         should be false
       end
     end
+
   end
 end

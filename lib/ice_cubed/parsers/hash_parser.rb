@@ -1,7 +1,6 @@
-# frozen_string_literal: true
-
 module IceCubed
   class HashParser
+
     attr_reader :hash
 
     def initialize(original_hash)
@@ -27,13 +26,13 @@ module IceCubed
       data = IceCubed::FlexibleHash.new(hash.dup)
 
       if (start_date = data.delete(:start_date))
-        warn "IceCubed: :start_date is deprecated, please use :start_time at: #{caller[0]}"
+        warn "IceCubed: :start_date is deprecated, please use :start_time at: #{ caller[0] }"
         data[:start_time] = start_date
       end
 
-      { rdates: :rtimes, exdates: :extimes }.each do |old_key, new_key|
+      {:rdates => :rtimes, :exdates => :extimes}.each do |old_key, new_key|
         if (times = data.delete(old_key))
-          warn "IceCubed: :#{old_key} is deprecated, please use :#{new_key} at: #{caller[0]}"
+          warn "IceCubed: :#{old_key} is deprecated, please use :#{new_key} at: #{ caller[0] }"
           (data[new_key] ||= []).concat times
         end
       end
@@ -43,19 +42,16 @@ module IceCubed
 
     def apply_duration(schedule, data)
       return unless data[:duration]
-
       schedule.duration = data[:duration].to_i
     end
 
     def apply_end_time(schedule, data)
       return unless data[:end_time]
-
       schedule.end_time = parse_time(data[:end_time])
     end
 
     def apply_rrules(schedule, data)
       return unless data[:rrules]
-
       data[:rrules].each do |h|
         rrule = h.is_a?(IceCubed::Rule) ? h : IceCubed::Rule.from_hash(h)
 
@@ -65,8 +61,7 @@ module IceCubed
 
     def apply_exrules(schedule, data)
       return unless data[:exrules]
-
-      warn "IceCubed: :exrules is deprecated, and will be removed in a future release. at: #{caller[0]}"
+      warn "IceCubed: :exrules is deprecated, and will be removed in a future release. at: #{ caller[0] }"
       data[:exrules].each do |h|
         rrule = h.is_a?(IceCubed::Rule) ? h : IceCubed::Rule.from_hash(h)
 
@@ -76,7 +71,6 @@ module IceCubed
 
     def apply_rtimes(schedule, data)
       return unless data[:rtimes]
-
       data[:rtimes].each do |t|
         schedule.add_recurrence_time TimeUtil.deserialize_time(t)
       end
@@ -84,7 +78,6 @@ module IceCubed
 
     def apply_extimes(schedule, data)
       return unless data[:extimes]
-
       data[:extimes].each do |t|
         schedule.add_exception_time TimeUtil.deserialize_time(t)
       end
@@ -93,5 +86,6 @@ module IceCubed
     def parse_time(time)
       TimeUtil.deserialize_time(time)
     end
+
   end
 end

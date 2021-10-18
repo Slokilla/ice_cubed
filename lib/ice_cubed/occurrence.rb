@@ -1,8 +1,7 @@
-# frozen_string_literal: true
-
-require "delegate"
+require 'delegate'
 
 module IceCubed
+
   # Wraps start_time and end_time in a single concept concerning the duration.
   # This delegates to the enclosed start_time so it behaves like a normal Time
   # in almost all situations, however:
@@ -24,14 +23,14 @@ module IceCubed
 
     # Report class name as 'Time' to thwart type checking.
     def self.name
-      "Time"
+      'Time'
     end
 
     attr_reader :start_time, :end_time
     alias first start_time
     alias last end_time
 
-    def initialize(start_time, end_time = nil)
+    def initialize(start_time, end_time=nil)
       @start_time = start_time
       @end_time = end_time || start_time
       __setobj__ @start_time
@@ -48,7 +47,7 @@ module IceCubed
     def is_a?(klass)
       klass == ::Time || super
     end
-    alias kind_of? is_a?
+    alias_method :kind_of?, :is_a?
 
     def intersects?(other)
       return cover?(other) unless other.is_a?(Occurrence) || other.is_a?(Range)
@@ -64,7 +63,7 @@ module IceCubed
     def cover?(other)
       to_range.cover?(other)
     end
-    alias include? cover?
+    alias_method :include?, :cover?
 
     def comparable_time
       start_time
@@ -86,19 +85,17 @@ module IceCubed
     # Optional format argument (e.g. :long, :short) supports Rails
     # time formats and is only used when ActiveSupport is available.
     #
-    def to_s(format = nil)
+    def to_s(format=nil)
       if format && to_time.public_method(:to_s).arity != 0
-        t0 = start_time.to_s(format)
-        t1 = end_time.to_s(format)
+        t0, t1 = start_time.to_s(format), end_time.to_s(format)
       else
-        t0 = start_time.to_s
-        t1 = end_time.to_s
+        t0, t1 = start_time.to_s, end_time.to_s
       end
-      duration.positive? ? "#{t0} - #{t1}" : t0
+      duration > 0 ? "#{t0} - #{t1}" : t0
     end
 
     def overnight?
-      offset = start_time + (3600 * 24)
+      offset = start_time + 3600 * 24
       midnight = Time.new(offset.year, offset.month, offset.day)
       midnight < end_time
     end

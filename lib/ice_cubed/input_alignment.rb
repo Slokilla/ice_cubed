@@ -1,7 +1,6 @@
-# frozen_string_literal: true
-
 module IceCubed
   class InputAlignment
+
     def initialize(rule, value, rule_part)
       @rule = rule
       @value = value
@@ -10,7 +9,7 @@ module IceCubed
 
     attr_reader :rule, :value, :rule_part
 
-    def verify(freq, _options = {}, &block)
+    def verify(freq, options={}, &block)
       @rule.validations[:interval] or return
 
       case @rule
@@ -30,15 +29,15 @@ module IceCubed
     end
 
     def interval_value
-      @interval_value ||= rule_part == :interval ? value : interval_validation.interval
+      @interval_value ||= (rule_part == :interval) ? value : interval_validation.interval
     end
 
     def fixed_validations
-      @fixed_validations ||= @rule.validations.values.flatten.select do |v|
+      @fixed_validations ||= @rule.validations.values.flatten.select { |v|
         interval_type = (v.type == :wday ? :day : v.type)
         v.class < Validations::FixedValue &&
           interval_type == rule.base_interval_validation.type
-      end
+      }
     end
 
     def verify_freq_alignment(freq)
@@ -48,16 +47,16 @@ module IceCubed
       alignment = (value - last_validation.value) % interval_validation.interval
       return if alignment.zero?
 
-      validation_values = fixed_validations.map(&:value).join(", ")
-      message = if rule_part == :interval
-                  "interval(#{value}) " \
-                    "must be a multiple of " \
-                    "intervals in #{last_validation.key}(#{validation_values})"
-                else
-                  "intervals in #{last_validation.key}(#{validation_values}, #{value}) " \
-                    "must be multiples of " \
-                    "interval(#{interval_validation.interval})"
-                end
+      validation_values = fixed_validations.map(&:value).join(', ')
+      if rule_part == :interval
+        message = "interval(#{value}) " \
+                  "must be a multiple of " \
+                  "intervals in #{last_validation.key}(#{validation_values})"
+      else
+        message = "intervals in #{last_validation.key}(#{validation_values}, #{value}) " \
+                  "must be multiples of " \
+                  "interval(#{interval_validation.interval})"
+      end
 
       yield ArgumentError.new(message)
     end
@@ -77,7 +76,6 @@ module IceCubed
       if freq == :wday
         return if (interval_value % 7).zero?
         return if Array(@rule.validations[:day]).empty?
-
         message = "day can only be used with multiples of interval(7)"
       else
         (fixed_validation = fixed_validations.first) or return
@@ -86,5 +84,6 @@ module IceCubed
 
       yield ArgumentError.new(message)
     end
+
   end
 end

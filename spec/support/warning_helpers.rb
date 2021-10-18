@@ -1,6 +1,5 @@
-# frozen_string_literal: true
-
 module WarningHelpers
+
   def capture_warnings
     StringIO.open("") do |stderr|
       stderr, $stderr = $stderr, stderr
@@ -9,4 +8,5 @@ module WarningHelpers
       stderr.string
     end
   end
+
 end

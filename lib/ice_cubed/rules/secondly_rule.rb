@@ -1,7 +1,7 @@
-# frozen_string_literal: true
-
 module IceCubed
+
   class SecondlyRule < ValidatedRule
+
     include Validations::HourOfDay
     include Validations::MinuteOfHour
     include Validations::SecondOfMinute
@@ -18,5 +18,7 @@ module IceCubed
       interval(interval)
       reset
     end
+
   end
+
 end

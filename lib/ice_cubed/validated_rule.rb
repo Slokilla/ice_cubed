@@ -1,9 +1,9 @@
-# frozen_string_literal: true
-
-require "ice_cubed/input_alignment"
+require 'ice_cubed/input_alignment'
 
 module IceCubed
+
   class ValidatedRule < Rule
+
     include Validations::ScheduleLock
 
     include Validations::Count
@@ -15,18 +15,18 @@ module IceCubed
     # * base values by cardinality (n = 60, 60, 31, 24, 12, 7)
     # * locks by cardinality (n = 365, 60, 60, 31, 24, 12, 7)
     # * interval multiplier
-    VALIDATION_ORDER = %i[
-      year month day wday hour min sec count until
-      base_sec base_min base_day base_hour base_month base_wday
-      day_of_year second_of_minute minute_of_hour day_of_month
-      hour_of_day month_of_year day_of_week
-      interval
-    ].freeze
+    VALIDATION_ORDER = [
+      :year, :month, :day, :wday, :hour, :min, :sec, :count, :until,
+      :base_sec, :base_min, :base_day, :base_hour, :base_month, :base_wday,
+      :day_of_year, :second_of_minute, :minute_of_hour, :day_of_month,
+      :hour_of_day, :month_of_year, :day_of_week,
+      :interval
+    ]
 
     attr_reader :validations
 
-    def initialize(_interval = 1)
-      @validations = {}
+    def initialize(interval = 1)
+      @validations = Hash.new
     end
 
     # Reset the uses on the rule to 0
@@ -59,7 +59,7 @@ module IceCubed
       @time
     end
 
-    def realign(_opening_time, start_time)
+    def realign(opening_time, start_time)
       start_time
     end
 
@@ -122,11 +122,7 @@ module IceCubed
 
     def normalized_interval(interval)
       int = interval.to_i
-      unless int.positive?
-        raise ArgumentError,
-              "'#{interval}' is not a valid input for interval. Please pass a postive integer."
-      end
-
+      raise ArgumentError, "'#{interval}' is not a valid input for interval. Please pass a postive integer." unless int > 0
       int
     end
 
@@ -137,7 +133,9 @@ module IceCubed
     end
 
     def find_acceptable_time_before(boundary)
-      return false if past_closing_time?(boundary) until finds_acceptable_time?
+      until finds_acceptable_time?
+        return false if past_closing_time?(boundary)
+      end
       true
     end
 
@@ -147,8 +145,7 @@ module IceCubed
     def validation_accepts_or_updates_time?(validations_for_type)
       res = validations_for_type.each_with_object([]) do |validation, offsets|
         r = validation.validate(@time, @start_time)
-        return true if r.nil? || r.zero?
-
+        return true if r.nil? || r == 0
         offsets << r
       end
       shift_time_by_validation(res, validations_for_type.first)
@@ -157,7 +154,6 @@ module IceCubed
 
     def shift_time_by_validation(res, validation)
       return unless (interval = res.min)
-
       wrapper = TimeUtil::TimeWrapper.new(@time, validation.dst_adjust?)
       wrapper.add(validation.type, interval)
       wrapper.clear_below(validation.type)
@@ -182,8 +178,12 @@ module IceCubed
       VALIDATION_ORDER & @validations.keys
     end
 
-    def verify_alignment(value, freq, rule_part, &block)
-      InputAlignment.new(self, value, rule_part).verify(freq, &block)
+    def verify_alignment(value, freq, rule_part)
+      InputAlignment.new(self, value, rule_part).verify(freq) do |error|
+        yield error
+      end
     end
+
   end
+
 end
